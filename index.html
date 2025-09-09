@@ -37,11 +37,21 @@
     <h2>회원가입</h2>
     <div class="auth-field">
       <label for="signup-username">아이디</label>
-      <input id="signup-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username" />
+      <input id="signup-username" type="text" />
     </div>
     <div class="auth-field">
       <label for="signup-password">비밀번호</label>
-      <input id="signup-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="new-password" />
+      <div style="display:flex; align-items:center;">
+        <input id="signup-password" type="password" style="flex:1;" />
+        <button type="button" id="toggle-signup-password" class="pw-toggle-btn" tabindex="-1" style="margin-left:6px;">👁️</button>
+      </div>
+    </div>
+    <div class="auth-field">
+      <label for="signup-password-confirm">비밀번호 확인</label>
+      <div style="display:flex; align-items:center;">
+        <input id="signup-password-confirm" type="password" style="flex:1;" />
+        <button type="button" id="toggle-signup-password-confirm" class="pw-toggle-btn" tabindex="-1" style="margin-left:6px;">👁️</button>
+      </div>
     </div>
     <div class="auth-actions">
       <button id="signup-btn" class="auth-btn">회원가입</button>

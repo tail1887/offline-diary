@@ -9,9 +9,9 @@ if (typeof window !== 'undefined' && window.TextEncoder) {
   TextEncoderClass = window.TextEncoder;
   TextDecoderClass = window.TextDecoder;
 } else {
-  const { TextEncoder, TextDecoder } = require('util');
-  TextEncoderClass = TextEncoder;
-  TextDecoderClass = TextDecoder;
+  const util = await import('util');
+    TextEncoderClass = util.TextEncoder;
+    TextDecoderClass = util.TextDecoder;
 }
 
 const encoder = new TextEncoderClass();
