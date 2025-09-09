@@ -14,23 +14,42 @@
   <header>
     <h1>Offline Diary</h1>
   </header>
-  <div id="auth-container" class="auth-box" style="display:none;">
-    <h2>회원가입</h2>
+  <!-- 로그인 폼 -->
+  <div id="login-container" class="auth-box" style="display:none;">
+    <h2>로그인</h2>
     <div class="auth-field">
-      <label for="auth-username">아이디</label>
-      <input id="auth-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username" />
+      <label for="login-username">아이디</label>
+      <input id="login-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username" />
     </div>
     <div class="auth-field">
-      <label for="auth-password">비밀번호</label>
-      <input id="auth-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="new-password" />
+      <label for="login-password">비밀번호</label>
+      <input id="login-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password" />
+    </div>
+    <div class="auth-actions">
+      <button id="login-btn" class="auth-btn">로그인</button>
+      <button id="show-signup-btn" class="auth-btn">회원가입</button>
+    </div>
+    <div id="login-message" class="auth-message"></div>
+  </div>
+
+  <!-- 회원가입 폼 -->
+  <div id="signup-container" class="auth-box" style="display:none;">
+    <h2>회원가입</h2>
+    <div class="auth-field">
+      <label for="signup-username">아이디</label>
+      <input id="signup-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username" />
+    </div>
+    <div class="auth-field">
+      <label for="signup-password">비밀번호</label>
+      <input id="signup-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="new-password" />
     </div>
     <div class="auth-actions">
       <button id="signup-btn" class="auth-btn">회원가입</button>
-      <button id="login-btn" class="auth-btn">로그인</button>
-      <button id="logout-btn" style="display:none;">로그아웃</button>
+      <button id="show-login-btn" class="auth-btn">로그인으로</button>
     </div>
-    <div id="auth-message" class="auth-message"></div>
+    <div id="signup-message" class="auth-message"></div>
   </div>
+  
   <main>
     <section>
       <input id="title-input" type="text" placeholder="제목 입력" />
