@@ -187,3 +187,4 @@ export function setupUI() {
   if (sortSelect) sortSelect.onchange = renderDiaryList;
 
   renderDiaryList();
+}
