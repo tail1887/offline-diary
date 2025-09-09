@@ -160,8 +160,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const signupBtn = document.getElementById('signup-btn');
   if (signupBtn) {
     signupBtn.onclick = async () => {
-      const username = document.getElementById('signup-username').value;
-      const password = document.getElementById('signup-password').value;
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value.trim();
+      const passwordConfirm = document.getElementById('signup-password-confirm').value.trim();
+
+      if (!username) {
+        showSignupMessage('아이디를 입력하세요!');
+        return;
+      }
+      if (!password) {
+        showSignupMessage('비밀번호를 입력하세요!');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        showSignupMessage('비밀번호가 일치하지 않습니다!');
+        return;
+      }
       try {
         await createAccount(username, password);
         showSignupMessage('회원가입 성공! 로그인하세요.');
@@ -174,13 +188,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
   }
+  // 비밀번호 보기/숨기기 토글 이벤트
+  const pwInput = document.getElementById('signup-password');
+  const pwToggleBtn = document.getElementById('toggle-signup-password');
+  if (pwInput && pwToggleBtn) {
+    pwToggleBtn.onclick = () => {
+      pwInput.type = pwInput.type === 'password' ? 'text' : 'password';
+      pwToggleBtn.textContent = pwInput.type === 'password' ? '👁️' : '🙈';
+    };
+  }
 
+  const pwConfirmInput = document.getElementById('signup-password-confirm');
+  const pwConfirmToggleBtn = document.getElementById('toggle-signup-password-confirm');
+  if (pwConfirmInput && pwConfirmToggleBtn) {
+    pwConfirmToggleBtn.onclick = () => {
+      pwConfirmInput.type = pwConfirmInput.type === 'password' ? 'text' : 'password';
+      pwConfirmToggleBtn.textContent = pwConfirmInput.type === 'password' ? '👁️' : '🙈';
+    };
+  }
   // 로그인 이벤트
   const loginBtn = document.getElementById('login-btn');
   if (loginBtn) {
     loginBtn.onclick = async () => {
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      if (!username) {
+        showLoginMessage('아이디를 입력하세요!');
+        return;
+      }
+      if (!password) {
+        showLoginMessage('비밀번호를 입력하세요!');
+        return;
+      }
       try {
         await login(username, password);
         showLoginMessage('로그인 성공!');

@@ -5,13 +5,20 @@ if (typeof globalThis.crypto === 'undefined' || typeof globalThis.crypto.subtle 
 }
 
 let TextEncoderClass, TextDecoderClass;
+
 if (typeof window !== 'undefined' && window.TextEncoder) {
   TextEncoderClass = window.TextEncoder;
   TextDecoderClass = window.TextDecoder;
+} else if (typeof globalThis.TextEncoder !== 'undefined') {
+  TextEncoderClass = globalThis.TextEncoder;
+  TextDecoderClass = globalThis.TextDecoder;
+} else if (typeof require === 'function') {
+  // Node.js 환경에서만 require 사용
+  const util = require('util');
+  TextEncoderClass = util.TextEncoder;
+  TextDecoderClass = util.TextDecoder;
 } else {
-  const { TextEncoder, TextDecoder } = require('util');
-  TextEncoderClass = TextEncoder;
-  TextDecoderClass = TextDecoder;
+  throw new Error('TextEncoder/TextDecoder not available');
 }
 
 const encoder = new TextEncoderClass();
