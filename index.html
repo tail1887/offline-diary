@@ -13,6 +13,14 @@
   <header>
     <h1>Offline Diary</h1>
   </header>
+  <div id="auth-container" style="display:none;">
+    <input id="auth-username" type="text" placeholder="아이디" />
+    <input id="auth-password" type="password" placeholder="비밀번호" />
+    <button id="signup-btn">회원가입</button>
+    <button id="login-btn">로그인</button>
+    <button id="logout-btn" style="display:none;">로그아웃</button>
+    <div id="auth-message"></div>
+  </div>
   <main>
     <section>
       <input id="title-input" type="text" placeholder="제목 입력" />
@@ -39,104 +47,6 @@
     </aside>
   </main>
   <div id="toast" class="toast"></div>
-  <script type="module">
-    import { setupUI } from './scripts/ui.js';
-    import { createDiary, updateDiary, deleteDiaryEntry, listDiaries, readDiary } from './scripts/diary.js';
-    import { initEditor, getEditorContent, setEditorContent, destroyEditor } from './scripts/editor.js';
-    import { searchDiaries, filterByCategory, sortDiaries } from './scripts/filter.js';
-
-    let selectedDiaryId = null;
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 1800);
-    }
-
-    function resetEditor() {
-      setEditorContent('');
-      document.getElementById('title-input').value = '';
-      selectedDiaryId = null;
-      document.getElementById('cancel-btn').style.display = 'none';
-      document.getElementById('delete-btn').style.display = 'none';
-      document.getElementById('save-btn').textContent = '저장';
-      document.querySelectorAll('.diary-item').forEach(el => el.classList.remove('selected'));
-    }
-
-    async function renderDiaryList() {
-      const diaries = await listDiaries();
-      const keyword = document.getElementById('search-input').value;
-      const category = document.getElementById('category-select').value;
-      const sortBy = document.getElementById('sort-select').value;
-
-      let filtered = searchDiaries(diaries, keyword);
-      filtered = filterByCategory(filtered, category);
-      filtered = sortDiaries(filtered, sortBy);
-
-      const listEl = document.getElementById('diary-list');
-      listEl.innerHTML = '';
-      filtered.forEach(diary => {
-        const item = document.createElement('div');
-        item.className = 'diary-item' + (diary.id === selectedDiaryId ? ' selected' : '');
-        item.textContent = `${diary.title} (${diary.date})`;
-        item.onclick = async () => {
-          selectedDiaryId = diary.id;
-          setEditorContent(diary.content);
-          document.getElementById('title-input').value = diary.title;
-          document.getElementById('cancel-btn').style.display = '';
-          document.getElementById('delete-btn').style.display = '';
-          document.getElementById('save-btn').textContent = '수정';
-          document.querySelectorAll('.diary-item').forEach(el => el.classList.remove('selected'));
-          item.classList.add('selected');
-        };
-        listEl.appendChild(item);
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      initEditor('editor-container');
-      renderDiaryList();
-
-      document.getElementById('save-btn').addEventListener('click', async () => {
-        const title = document.getElementById('title-input').value.trim();
-        const content = getEditorContent();
-        if (!title) {
-          showToast('제목을 입력하세요!');
-          return;
-        }
-        if (!content) {
-          showToast('내용을 입력하세요!');
-          return;
-        }
-        if (selectedDiaryId) {
-          await updateDiary(selectedDiaryId, { title, content });
-          showToast('일기가 수정되었습니다.');
-        } else {
-          await createDiary({ title, content, date: new Date().toISOString().slice(0, 10), categories: [], tags: [] });
-          showToast('일기가 저장되었습니다.');
-        }
-        resetEditor();
-        renderDiaryList();
-      });
-
-      document.getElementById('cancel-btn').addEventListener('click', () => {
-        resetEditor();
-      });
-
-      document.getElementById('delete-btn').addEventListener('click', async () => {
-        if (selectedDiaryId) {
-          await deleteDiaryEntry(selectedDiaryId);
-          showToast('일기가 삭제되었습니다.');
-          resetEditor();
-          renderDiaryList();
-        }
-      });
-
-      document.getElementById('search-input').addEventListener('input', renderDiaryList);
-      document.getElementById('category-select').addEventListener('change', renderDiaryList);
-      document.getElementById('sort-select').addEventListener('change', renderDiaryList);
-    });
-  </script>
+  <script type="module" src="scripts/ui.js"></script>
 </body>
 </html>
