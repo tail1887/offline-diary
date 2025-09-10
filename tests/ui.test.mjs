@@ -25,6 +25,11 @@ import { setupUI } from '../scripts/ui.js';
 describe('ui.js 회원가입/로그인/비밀번호 토글', () => {
   beforeEach(() => {
     document.body.innerHTML = `
+      <nav id="main-navbar" style="display:none;">
+        <button id="nav-write" class="nav-btn">일기생성</button>
+        <button id="nav-list" class="nav-btn">목록</button>
+        <button id="logout-btn" class="nav-btn">로그아웃</button>
+      </nav>
       <div id="login-container" class="auth-box">
         <input id="login-username" />
         <input id="login-password" type="password" />
@@ -43,15 +48,20 @@ describe('ui.js 회원가입/로그인/비밀번호 토글', () => {
         <div id="signup-message"></div>
       </div>
       <main style="display:none;">
-        <input id="title-input" />
-        <input id="search-input" />
-        <select id="category-select"><option value="">All</option></select>
-        <select id="sort-select"><option value="latest">Latest</option></select>
-        <button id="save-btn"></button>
-        <button id="cancel-btn"></button>
-        <button id="delete-btn"></button>
-        <div id="editor-container"></div>
-        <div id="diary-list"></div>
+        <section id="editor-section" style="display:none;">
+          <input id="title-input" />
+          <input id="tags-input" />
+          <div id="editor-container"></div>
+          <button id="save-btn"></button>
+          <button id="cancel-btn"></button>
+          <button id="delete-btn"></button>
+        </section>
+        <aside id="list-section" style="display:none;">
+          <input id="search-input" />
+          <select id="category-select"><option value="">All</option></select>
+          <select id="sort-select"><option value="latest">Latest</option></select>
+          <div id="diary-list"></div>
+        </aside>
       </main>
       <div id="toast"></div>
     `;
@@ -122,6 +132,36 @@ describe('ui.js 회원가입/로그인/비밀번호 토글', () => {
     // 다시 로그인 폼으로 전환
     showLoginBtn.click();
     expect(document.getElementById('signup-container').style.display).toBe('none');
+    expect(document.getElementById('login-container').style.display).toBe('');
+  });
+
+  // 메뉴바 및 화면 전환 테스트 추가
+  test('로그인 성공 시 메뉴바와 목록 화면이 표시된다', async () => {
+    // 로그인 폼에 값 입력 후 로그인 버튼 클릭
+    document.getElementById('login-username').value = 'testuser';
+    document.getElementById('login-password').value = 'pw1234';
+    document.getElementById('login-btn').click();
+    await new Promise(r => setTimeout(r, 150));
+    expect(document.getElementById('main-navbar').style.display).toBe('');
+    expect(document.getElementById('list-section').style.display).toBe('');
+    expect(document.getElementById('editor-section').style.display).toBe('none');
+  });
+
+  test('메뉴바 버튼 클릭 시 화면 전환', () => {
+    // 에디터 버튼 클릭
+    document.getElementById('nav-write').click();
+    expect(document.getElementById('editor-section').style.display).toBe('');
+    expect(document.getElementById('list-section').style.display).toBe('none');
+    // 목록 버튼 클릭
+    document.getElementById('nav-list').click();
+    expect(document.getElementById('editor-section').style.display).toBe('none');
+    expect(document.getElementById('list-section').style.display).toBe('');
+  });
+
+  test('로그아웃 시 메뉴바와 main이 숨겨지고 로그인 폼이 표시된다', () => {
+    document.getElementById('logout-btn').click();
+    expect(document.getElementById('main-navbar').style.display).toBe('none');
+    expect(document.querySelector('main').style.display).toBe('none');
     expect(document.getElementById('login-container').style.display).toBe('');
   });
 });

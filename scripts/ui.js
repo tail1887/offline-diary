@@ -25,24 +25,6 @@ function showSignupMessage(msg) {
   if (msgEl) msgEl.textContent = msg;
 }
 
-// 메뉴바 버튼 이벤트
-document.getElementById('nav-write').onclick = () => {
-  document.querySelector('main').style.display = '';
-  document.getElementById('editor-section').style.display = '';
-  document.getElementById('list-section').style.display = 'none';
-};
-
-document.getElementById('nav-list').onclick = () => {
-  document.querySelector('main').style.display = '';
-  document.getElementById('editor-section').style.display = 'none';
-  document.getElementById('list-section').style.display = '';
-};
-
-document.getElementById('logout-btn').onclick = () => {
-  logout();
-  location.reload(); // 로그아웃 후 새로고침 또는 로그인 폼 표시
-};
-
 function resetEditor() {
   setEditorContent('');
   const titleInput = document.getElementById('title-input');
@@ -165,9 +147,37 @@ export function setupUI() {
   renderDiaryList();
 }
 
-
-// 로그인/회원가입 폼 전환 및 이벤트 연결
+// 로그인/회원가입 폼 전환 및 이벤트 연결 + 메뉴바 버튼 이벤트 등록
 document.addEventListener('DOMContentLoaded', () => {
+  // 메뉴바 버튼 이벤트
+  const navWriteBtn = document.getElementById('nav-write');
+  const navListBtn = document.getElementById('nav-list');
+  const logoutBtn = document.getElementById('logout-btn');
+  if (navWriteBtn) {
+    navWriteBtn.onclick = () => {
+      document.querySelector('main').style.display = '';
+      document.getElementById('editor-section').style.display = '';
+      document.getElementById('list-section').style.display = 'none';
+    };
+  }
+  if (navListBtn) {
+    navListBtn.onclick = () => {
+      document.querySelector('main').style.display = '';
+      document.getElementById('editor-section').style.display = 'none';
+      document.getElementById('list-section').style.display = '';
+    };
+  }
+  if (logoutBtn) {
+    logoutBtn.onclick = () => {
+      logout();
+      showToast('로그아웃 되었습니다.');
+      document.querySelector('main').style.display = 'none';
+      document.getElementById('main-navbar').style.display = 'none';
+      document.getElementById('login-container').style.display = '';
+      document.getElementById('signup-container').style.display = 'none';
+    };
+  }
+
   // 폼 전환 버튼
   const showSignupBtn = document.getElementById('show-signup-btn');
   if (showSignupBtn) {
@@ -259,18 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {
         showLoginMessage(e.message);
       }
-    };
-  }
-
-  // 로그아웃 이벤트
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.onclick = () => {
-      logout();
-      showToast('로그아웃 되었습니다.');
-      document.querySelector('main').style.display = 'none';
-      document.getElementById('main-navbar').style.display = 'none';
-      document.getElementById('login-container').style.display = '';
     };
   }
 
