@@ -252,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoginMessage('로그인 성공!');
         document.getElementById('login-container').style.display = 'none';
         document.querySelector('main').style.display = '';
+        document.getElementById('main-navbar').style.display = '';
         document.getElementById('editor-section').style.display = 'none';
         document.getElementById('list-section').style.display = '';
         setupUI();
@@ -268,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
       logout();
       showToast('로그아웃 되었습니다.');
       document.querySelector('main').style.display = 'none';
+      document.getElementById('main-navbar').style.display = 'none';
       document.getElementById('login-container').style.display = '';
     };
   }
@@ -277,12 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('main').style.display = 'none';
     document.getElementById('login-container').style.display = '';
     document.getElementById('signup-container').style.display = 'none';
-    if (logoutBtn) logoutBtn.style.display = 'none';
+    document.getElementById('main-navbar').style.display = 'none'; // 메뉴바 숨김
   } else {
     document.querySelector('main').style.display = '';
     document.getElementById('login-container').style.display = 'none';
     document.getElementById('signup-container').style.display = 'none';
-    if (logoutBtn) logoutBtn.style.display = '';
     setupUI();
   }
 });
