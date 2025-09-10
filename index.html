@@ -59,10 +59,17 @@
     </div>
     <div id="signup-message" class="auth-message"></div>
   </div>
+
+  <nav id="main-navbar">
+    <button id="nav-write" class="nav-btn">일기생성</button>
+    <button id="nav-list" class="nav-btn">목록</button>
+    <button id="logout-btn" class="nav-btn">로그아웃</button>
+  </nav>
   
   <main>
-    <section>
+    <section id="editor-section" style="display:none;">
       <input id="title-input" type="text" placeholder="제목 입력" />
+      <input id="tags-input" type="text" placeholder="태그(쉼표로 구분)" />
       <div id="editor-container"></div>
       <div>
         <button id="save-btn">저장</button>
@@ -70,7 +77,7 @@
         <button id="delete-btn" style="display:none;">삭제</button>
       </div>
     </section>
-    <aside>
+    <aside id="list-section" style="display:none;">
       <input id="search-input" type="text" placeholder="검색" />
       <select id="category-select">
         <option value="">전체</option>
