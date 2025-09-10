@@ -61,27 +61,35 @@ export async function renderDiaryList() {
   filtered.forEach(diary => {
     const item = document.createElement('div');
     item.className = 'diary-item' + (diary.id === selectedDiaryId ? ' selected' : '');
+    item.dataset.id = diary.id;
     // 태그 표시 추가
     const tagsText = diary.tags && diary.tags.length ? ` [${diary.tags.join(', ')}]` : '';
     item.textContent = `${diary.title} (${diary.date})${tagsText}`;
     item.onclick = async () => {
-      selectedDiaryId = diary.id;
-      setEditorContent(diary.content);
-      const titleInput = document.getElementById('title-input');
-      if (titleInput) titleInput.value = diary.title;
-      const tagsInput = document.getElementById('tags-input');
-      if (tagsInput) tagsInput.value = diary.tags ? diary.tags.join(', ') : '';
-      const cancelBtn = document.getElementById('cancel-btn');
-      const deleteBtn = document.getElementById('delete-btn');
-      const saveBtn = document.getElementById('save-btn');
-      if (cancelBtn) cancelBtn.style.display = '';
-      if (deleteBtn) deleteBtn.style.display = '';
-      if (saveBtn) saveBtn.textContent = '수정';
+      // 미리보기 영역에 표시
+      const previewSection = document.getElementById('preview-section');
+      const previewTitle = document.getElementById('preview-title');
+      const previewTags = document.getElementById('preview-tags');
+      const previewContent = document.getElementById('preview-content');
+      if (previewSection && previewTitle && previewTags && previewContent) {
+        previewTitle.textContent = diary.title;
+        previewTags.textContent = diary.tags ? diary.tags.join(', ') : '';
+        previewContent.textContent = diary.content;
+        previewSection.style.display = '';
+        document.getElementById('edit-btn').dataset.id = diary.id;
+      }
+      // 목록에서 선택 표시
       document.querySelectorAll('.diary-item').forEach(el => el.classList.remove('selected'));
       item.classList.add('selected');
     };
     listEl.appendChild(item);
   });
+
+  // 미리보기 영역 숨기기(목록이 비어있을 때)
+  const previewSection = document.getElementById('preview-section');
+  if (previewSection && filtered.length === 0) {
+    previewSection.style.display = 'none';
+  }
 }
 
 // UI 전체 초기화 및 이벤트 등록
@@ -95,6 +103,7 @@ export function setupUI() {
   const searchInput = document.getElementById('search-input');
   const categorySelect = document.getElementById('category-select');
   const sortSelect = document.getElementById('sort-select');
+  const editBtn = document.getElementById('edit-btn');
 
   if (saveBtn) {
     saveBtn.onclick = async () => {
@@ -120,12 +129,17 @@ export function setupUI() {
       }
       resetEditor();
       renderDiaryList();
+      // 저장 후 목록 화면으로 이동
+      document.getElementById('editor-section').style.display = 'none';
+      document.getElementById('list-section').style.display = '';
     };
   }
 
   if (cancelBtn) {
     cancelBtn.onclick = () => {
       resetEditor();
+      document.getElementById('editor-section').style.display = 'none';
+      document.getElementById('list-section').style.display = '';
     };
   }
 
@@ -136,6 +150,8 @@ export function setupUI() {
         showToast('일기가 삭제되었습니다.');
         resetEditor();
         renderDiaryList();
+        document.getElementById('editor-section').style.display = 'none';
+        document.getElementById('list-section').style.display = '';
       }
     };
   }
@@ -143,6 +159,24 @@ export function setupUI() {
   if (searchInput) searchInput.oninput = renderDiaryList;
   if (categorySelect) categorySelect.onchange = renderDiaryList;
   if (sortSelect) sortSelect.onchange = renderDiaryList;
+
+  // "수정하기" 버튼 이벤트
+  if (editBtn) {
+    editBtn.onclick = async () => {
+      const diaryId = editBtn.dataset.id;
+      if (!diaryId) return;
+      const diary = await readDiary(diaryId);
+      document.getElementById('editor-section').style.display = '';
+      document.getElementById('list-section').style.display = 'none';
+      document.getElementById('title-input').value = diary.title;
+      document.getElementById('tags-input').value = diary.tags ? diary.tags.join(', ') : '';
+      setEditorContent(diary.content);
+      selectedDiaryId = diary.id;
+      saveBtn.textContent = '수정';
+      cancelBtn.style.display = '';
+      deleteBtn.style.display = '';
+    };
+  }
 
   renderDiaryList();
 }
@@ -158,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('main').style.display = '';
       document.getElementById('editor-section').style.display = '';
       document.getElementById('list-section').style.display = 'none';
+      resetEditor();
     };
   }
   if (navListBtn) {
@@ -165,6 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('main').style.display = '';
       document.getElementById('editor-section').style.display = 'none';
       document.getElementById('list-section').style.display = '';
+      renderDiaryList();
+      // 미리보기 영역 숨김
+      const previewSection = document.getElementById('preview-section');
+      if (previewSection) previewSection.style.display = 'none';
     };
   }
   if (logoutBtn) {
