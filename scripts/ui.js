@@ -25,10 +25,30 @@ function showSignupMessage(msg) {
   if (msgEl) msgEl.textContent = msg;
 }
 
+// 메뉴바 버튼 이벤트
+document.getElementById('nav-write').onclick = () => {
+  document.querySelector('main').style.display = '';
+  document.getElementById('editor-section').style.display = '';
+  document.getElementById('list-section').style.display = 'none';
+};
+
+document.getElementById('nav-list').onclick = () => {
+  document.querySelector('main').style.display = '';
+  document.getElementById('editor-section').style.display = 'none';
+  document.getElementById('list-section').style.display = '';
+};
+
+document.getElementById('logout-btn').onclick = () => {
+  logout();
+  location.reload(); // 로그아웃 후 새로고침 또는 로그인 폼 표시
+};
+
 function resetEditor() {
   setEditorContent('');
   const titleInput = document.getElementById('title-input');
   if (titleInput) titleInput.value = '';
+  const tagsInput = document.getElementById('tags-input');
+  if (tagsInput) tagsInput.value = '';
   selectedDiaryId = null;
   const cancelBtn = document.getElementById('cancel-btn');
   const deleteBtn = document.getElementById('delete-btn');
@@ -59,12 +79,16 @@ export async function renderDiaryList() {
   filtered.forEach(diary => {
     const item = document.createElement('div');
     item.className = 'diary-item' + (diary.id === selectedDiaryId ? ' selected' : '');
-    item.textContent = `${diary.title} (${diary.date})`;
+    // 태그 표시 추가
+    const tagsText = diary.tags && diary.tags.length ? ` [${diary.tags.join(', ')}]` : '';
+    item.textContent = `${diary.title} (${diary.date})${tagsText}`;
     item.onclick = async () => {
       selectedDiaryId = diary.id;
       setEditorContent(diary.content);
       const titleInput = document.getElementById('title-input');
       if (titleInput) titleInput.value = diary.title;
+      const tagsInput = document.getElementById('tags-input');
+      if (tagsInput) tagsInput.value = diary.tags ? diary.tags.join(', ') : '';
       const cancelBtn = document.getElementById('cancel-btn');
       const deleteBtn = document.getElementById('delete-btn');
       const saveBtn = document.getElementById('save-btn');
@@ -94,6 +118,8 @@ export function setupUI() {
     saveBtn.onclick = async () => {
       const titleInput = document.getElementById('title-input');
       const title = titleInput ? titleInput.value.trim() : '';
+      const tagsInput = document.getElementById('tags-input');
+      const tags = tagsInput ? tagsInput.value.split(',').map(t => t.trim()).filter(Boolean) : [];
       const content = getEditorContent();
       if (!title) {
         showToast('제목을 입력하세요!');
@@ -104,10 +130,10 @@ export function setupUI() {
         return;
       }
       if (selectedDiaryId) {
-        await updateDiary(selectedDiaryId, { title, content });
+        await updateDiary(selectedDiaryId, { title, content, tags });
         showToast('일기가 수정되었습니다.');
       } else {
-        await createDiary({ title, content, date: new Date().toISOString().slice(0, 10), categories: [], tags: [] });
+        await createDiary({ title, content, date: new Date().toISOString().slice(0, 10), categories: [], tags });
         showToast('일기가 저장되었습니다.');
       }
       resetEditor();
@@ -138,6 +164,7 @@ export function setupUI() {
 
   renderDiaryList();
 }
+
 
 // 로그인/회원가입 폼 전환 및 이벤트 연결
 document.addEventListener('DOMContentLoaded', () => {
@@ -225,6 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoginMessage('로그인 성공!');
         document.getElementById('login-container').style.display = 'none';
         document.querySelector('main').style.display = '';
+        document.getElementById('editor-section').style.display = 'none';
+        document.getElementById('list-section').style.display = '';
         setupUI();
       } catch (e) {
         showLoginMessage(e.message);
