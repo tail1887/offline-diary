@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Offline Diary</title>
+  <title>离线日记</title>
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/editor-styles.css">
@@ -12,90 +12,90 @@
 </head>
 <body>
   <header>
-    <h1>Offline Diary</h1>
+    <h1>离线日记</h1>
   </header>
-  <!-- 로그인 폼 -->
+  <!-- 登录表单 -->
   <div id="login-container" class="auth-box" style="display:none;">
-    <h2>로그인</h2>
+    <h2>登录</h2>
     <div class="auth-field">
-      <label for="login-username">아이디</label>
-      <input id="login-username" type="text" placeholder="아이디를 입력하세요" autocomplete="username" />
+      <label for="login-username">用户名</label>
+      <input id="login-username" type="text" placeholder="请输入用户名" autocomplete="username" />
     </div>
     <div class="auth-field">
-      <label for="login-password">비밀번호</label>
-      <input id="login-password" type="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password" />
+      <label for="login-password">密码</label>
+      <input id="login-password" type="password" placeholder="请输入密码" autocomplete="current-password" />
     </div>
     <div class="auth-actions">
-      <button id="login-btn" class="auth-btn">로그인</button>
-      <button id="show-signup-btn" class="auth-btn">회원가입</button>
+      <button id="login-btn" class="auth-btn">登录</button>
+      <button id="show-signup-btn" class="auth-btn">注册</button>
     </div>
     <div id="login-message" class="auth-message"></div>
   </div>
 
-  <!-- 회원가입 폼 -->
+  <!-- 注册表单 -->
   <div id="signup-container" class="auth-box" style="display:none;">
-    <h2>회원가입</h2>
+    <h2>注册</h2>
     <div class="auth-field">
-      <label for="signup-username">아이디</label>
+      <label for="signup-username">用户名</label>
       <input id="signup-username" type="text" />
     </div>
     <div class="auth-field">
-      <label for="signup-password">비밀번호</label>
+      <label for="signup-password">密码</label>
       <div style="display:flex; align-items:center;">
         <input id="signup-password" type="password" style="flex:1;" />
         <button type="button" id="toggle-signup-password" class="pw-toggle-btn" tabindex="-1" style="margin-left:6px;">👁️</button>
       </div>
     </div>
     <div class="auth-field">
-      <label for="signup-password-confirm">비밀번호 확인</label>
+      <label for="signup-password-confirm">确认密码</label>
       <div style="display:flex; align-items:center;">
         <input id="signup-password-confirm" type="password" style="flex:1;" />
         <button type="button" id="toggle-signup-password-confirm" class="pw-toggle-btn" tabindex="-1" style="margin-left:6px;">👁️</button>
       </div>
     </div>
     <div class="auth-actions">
-      <button id="signup-btn" class="auth-btn">회원가입</button>
-      <button id="show-login-btn" class="auth-btn">로그인으로</button>
+      <button id="signup-btn" class="auth-btn">注册</button>
+      <button id="show-login-btn" class="auth-btn">返回登录</button>
     </div>
     <div id="signup-message" class="auth-message"></div>
   </div>
 
   <nav id="main-navbar">
-    <button id="nav-write" class="nav-btn">일기생성</button>
-    <button id="nav-list" class="nav-btn">목록</button>
-    <button id="logout-btn" class="nav-btn">로그아웃</button>
+    <button id="nav-write" class="nav-btn">新建日记</button>
+    <button id="nav-list" class="nav-btn">日记列表</button>
+    <button id="logout-btn" class="nav-btn">退出登录</button>
   </nav>
   
   <main>
     <section id="editor-section" style="display:none;">
-      <input id="title-input" type="text" placeholder="제목 입력" />
-      <input id="tags-input" type="text" placeholder="태그(쉼표로 구분)" />
+      <input id="title-input" type="text" placeholder="请输入标题" />
+      <input id="tags-input" type="text" placeholder="标签（用逗号分隔）" />
       <div id="editor-container"></div>
       <div>
-        <button id="save-btn">저장</button>
-        <button id="cancel-btn" style="display:none;">취소</button>
-        <button id="delete-btn" style="display:none;">삭제</button>
+        <button id="save-btn">保存</button>
+        <button id="cancel-btn" style="display:none;">取消</button>
+        <button id="delete-btn" style="display:none;">删除</button>
       </div>
     </section>
     <aside id="list-section" style="display:none;">
-      <input id="search-input" type="text" placeholder="검색" />
+      <input id="search-input" type="text" placeholder="搜索" />
       <select id="category-select">
-        <option value="">전체</option>
-        <option value="personal">개인</option>
-        <option value="work">업무</option>
+        <option value="">全部</option>
+        <option value="personal">个人</option>
+        <option value="work">工作</option>
       </select>
       <select id="sort-select">
-        <option value="latest">최신순</option>
-        <option value="oldest">과거순</option>
-        <option value="title">제목순</option>
+        <option value="latest">最新</option>
+        <option value="oldest">最早</option>
+        <option value="title">标题</option>
       </select>
       <div id="diary-list"></div>
-      <!-- 미리보기 영역 추가 -->
+      <!-- 预览区域 -->
       <div id="preview-section" style="display:none; margin-top:20px; border:1px solid #ccc; padding:12px; border-radius:8px;">
         <h3 id="preview-title"></h3>
         <div id="preview-tags" style="color:#888; font-size:0.95em;"></div>
         <div id="preview-content" style="margin:10px 0;"></div>
-        <button id="edit-btn" class="nav-btn">수정하기</button>
+        <button id="edit-btn" class="nav-btn">编辑</button>
       </div>
     </aside>
   </main>
