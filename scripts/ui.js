@@ -1,5 +1,5 @@
 import { createDiary, updateDiary, deleteDiaryEntry, listDiaries, readDiary } from './diary.js';
-import { initEditor, getEditorContent, setEditorContent, destroyEditor } from './editor.js';
+import { initEditor, getEditorContent, setEditorContent} from './editor.js';
 import { searchDiaries, filterByCategory, sortDiaries } from './filter.js';
 import { createAccount, login, logout, getLoggedInUser } from './user.js';
 
